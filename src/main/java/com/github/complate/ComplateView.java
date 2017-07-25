@@ -34,7 +34,7 @@ public class ComplateView implements View {
         if (tag == null) {
             throw new IllegalArgumentException("tag may not be null");
         }
-        
+
         this.scriptingEngine = scriptingEngine;
         this.scriptLocation = scriptLocation;
         this.tag = tag;

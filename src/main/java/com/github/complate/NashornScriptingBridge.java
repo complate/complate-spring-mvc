@@ -18,8 +18,12 @@ final class NashornScriptingBridge implements ScriptingEngine {
                        final String functionName,
                        final Object... args) throws ScriptingException {
 
-        try {
-            engine.eval(readScript(new ClassPathResource(scriptLocation)));
+        try (Reader reader = readerForScript(new ClassPathResource(scriptLocation))) {
+            engine.eval(reader);
+        } catch (IOException err) {
+            throw new ScriptingException(String.format(
+                    "failed to read script from classpath, using path '%s'",
+                    scriptLocation), err);
         } catch (ScriptException err) {
             throw extractJavaScriptError(err)
                     .map(jsError -> new ScriptingException(
@@ -54,16 +58,17 @@ final class NashornScriptingBridge implements ScriptingEngine {
         }
     }
 
-    private static Reader readScript(final ClassPathResource scriptLocation) {
+    private static Reader readerForScript(final ClassPathResource scriptLocation) {
+        final InputStream is;
         try {
-            final InputStream is = scriptLocation.getInputStream();
-            final Reader isr = new InputStreamReader(is);
-            return new BufferedReader(isr);
+            is = scriptLocation.getInputStream();
         } catch (IOException err) {
             throw new ScriptingException(String.format(
-                    "failed to read script from classpath, using path '%s'",
+                    "failed to initialize input stream using path '%s'",
                     scriptLocation.getPath()), err);
         }
+        final Reader isr = new InputStreamReader(is);
+        return new BufferedReader(isr);
     }
 
     private static Optional<String> extractJavaScriptError(final Exception err) {
@@ -75,6 +80,4 @@ final class NashornScriptingBridge implements ScriptingEngine {
             return Optional.empty();
         }
     }
-
-
 }
