@@ -1,4 +1,4 @@
-package complate;
+package com.github.complate;
 
 import jdk.nashorn.api.scripting.NashornException;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
@@ -6,7 +6,6 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.*;
 import java.util.Optional;

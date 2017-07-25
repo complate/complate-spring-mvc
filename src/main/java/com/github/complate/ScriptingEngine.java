@@ -1,4 +1,4 @@
-package complate;
+package com.github.complate;
 
 public interface ScriptingEngine {
     void invoke(final String scriptLocation,

@@ -1,4 +1,4 @@
-package complate;
+package com.github.complate;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

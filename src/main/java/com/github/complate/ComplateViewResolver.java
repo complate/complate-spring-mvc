@@ -1,4 +1,4 @@
-package complate;
+package com.github.complate;
 
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
