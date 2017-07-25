@@ -11,7 +11,7 @@ publishArtifact in Test := false
 pomIncludeRepository := (_ => false)
 startYear := Some(2017)
 organizationHomepage := Some(url("https://github.com/complate"))
-developers := Seq(
+developers := List(
   Developer("dwestheide", "Daniel Westheide", "", url("https://github.com/dwestheide")))
 scmInfo := Some(ScmInfo(
   browseUrl = url("https://github.com/complate/complate-spring-mvc.git"),
