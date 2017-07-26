@@ -1,3 +1,5 @@
+import de.johoop.jacoco4sbt._
+
 name := "complate-spring-mvc"
 organization := "com.github.complate"
 description := "Integration of the Complate template library into Spring MVC"
@@ -33,3 +35,9 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.3" % "test",
   "org.mockito" % "mockito-core" % "2.8.47" % "test"
 )
+
+jacoco.settings
+
+jacoco.reportFormats in jacoco.Config := Seq(
+  XMLReport(encoding = "utf-8"),
+  ScalaHTMLReport(withBranchCoverage = true))
