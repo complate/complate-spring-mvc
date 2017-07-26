@@ -1,10 +1,12 @@
 package com.github.complate;
 
+import org.springframework.util.Assert;
 import org.springframework.web.servlet.View;
+
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 public class ComplateView implements View {
 
@@ -22,19 +24,10 @@ public class ComplateView implements View {
     ComplateView(final ScriptingEngine scriptingEngine,
                  final String scriptLocation,
                  final String tag) {
-
-        if (scriptingEngine == null) {
-            throw new IllegalArgumentException(
-                    "scriptingEngine may not be null");
-        }
-        if (scriptLocation == null) {
-            throw new IllegalArgumentException(
-                    "scriptLocation may not be null");
-        }
-        if (tag == null) {
-            throw new IllegalArgumentException("tag may not be null");
-        }
-
+        Assert.notNull(scriptingEngine, "ScriptingEngine must not be null");
+        Assert.hasText(scriptLocation,
+            "scriptLocation must not be null or empty");
+        Assert.notNull(tag, "tag must not be null");
         this.scriptingEngine = scriptingEngine;
         this.scriptLocation = scriptLocation;
         this.tag = tag;
