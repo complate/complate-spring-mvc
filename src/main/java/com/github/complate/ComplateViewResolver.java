@@ -1,5 +1,6 @@
 package com.github.complate;
 
+import org.springframework.util.Assert;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
@@ -16,14 +17,9 @@ public class ComplateViewResolver implements ViewResolver {
 
     public ComplateViewResolver(final ScriptingEngine scriptingEngine,
                                 final String scriptLocation) {
-        if (scriptingEngine == null) {
-            throw new IllegalArgumentException(
-                    "scriptingEngine may not be null");
-        }
-        if (scriptLocation == null) {
-            throw new IllegalArgumentException(
-                    "scriptLocation may not be null");
-        }
+        Assert.notNull(scriptingEngine, "ScriptingEngine must not be null");
+        Assert.hasText(scriptLocation,
+            "scriptLocation must not be null or empty");
         this.scriptingEngine = scriptingEngine;
         this.scriptLocation = scriptLocation;
     }
