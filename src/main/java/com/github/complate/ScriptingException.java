@@ -1,6 +1,6 @@
 package com.github.complate;
 
-final class ScriptingException extends RuntimeException {
+public final class ScriptingException extends RuntimeException {
 
     ScriptingException(final String message,
                        final String filepath,

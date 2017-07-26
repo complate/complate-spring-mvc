@@ -14,7 +14,8 @@ public class ComplateViewResolver implements ViewResolver {
 
     private final String scriptLocation;
 
-    ComplateViewResolver(final ScriptingEngine scriptingEngine, final String scriptLocation) {
+    public ComplateViewResolver(final ScriptingEngine scriptingEngine,
+                                final String scriptLocation) {
         if (scriptingEngine == null) {
             throw new IllegalArgumentException(
                     "scriptingEngine may not be null");
@@ -27,7 +28,7 @@ public class ComplateViewResolver implements ViewResolver {
         this.scriptLocation = scriptLocation;
     }
 
-    ComplateViewResolver() {
+    public ComplateViewResolver() {
         this(new NashornScriptingBridge(), DEFAULT_SCRIPT_LOCATION);
     }
 

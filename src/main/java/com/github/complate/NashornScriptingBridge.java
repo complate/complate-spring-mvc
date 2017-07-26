@@ -10,7 +10,7 @@ import javax.script.ScriptException;
 import java.io.*;
 import java.util.Optional;
 
-final class NashornScriptingBridge implements ScriptingEngine {
+public final class NashornScriptingBridge implements ScriptingEngine {
 
     private final NashornScriptEngine engine = createEngine();
 
