@@ -4,7 +4,7 @@ name := "complate-spring-mvc"
 organization := "com.github.complate"
 description := "Integration of the Complate template library into Spring MVC"
 
-version := "0.2.0"
+version := "0.3.0-SNAPSHOT"
 
 scalaVersion := "2.12.2"
 
