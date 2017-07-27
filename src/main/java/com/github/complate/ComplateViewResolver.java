@@ -10,8 +10,8 @@ import java.util.Locale;
 
 public class ComplateViewResolver implements ViewResolver {
 
-    private static final String DEFAULT_SCRIPT_LOCATION =
-            "/views/complate/bundle.js";
+    public static final Resource DEFAULT_BUNDLE =
+            new ClassPathResource("/templates/complate/bundle.js");
 
     private final ScriptingEngine scriptingEngine;
 
@@ -20,15 +20,13 @@ public class ComplateViewResolver implements ViewResolver {
     public ComplateViewResolver(final ScriptingEngine scriptingEngine,
                                 final Resource bundle) {
         Assert.notNull(scriptingEngine, "ScriptingEngine must not be null");
-        Assert.notNull(bundle,
-            "bundle must not be null");
+        Assert.notNull(bundle, "bundle must not be null");
         this.scriptingEngine = scriptingEngine;
         this.bundle = bundle;
     }
 
     public ComplateViewResolver() {
-        this(new NashornScriptingBridge(),
-                new ClassPathResource(DEFAULT_SCRIPT_LOCATION));
+        this(new NashornScriptingBridge(), DEFAULT_BUNDLE);
     }
 
     @Override
