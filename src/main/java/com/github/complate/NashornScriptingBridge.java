@@ -3,7 +3,7 @@ package com.github.complate;
 import jdk.nashorn.api.scripting.NashornException;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
@@ -14,16 +14,16 @@ public final class NashornScriptingBridge implements ScriptingEngine {
 
     private final NashornScriptEngine engine = createEngine();
 
-    public void invoke(final String scriptLocation,
+    public void invoke(final Resource bundle,
                        final String functionName,
                        final Object... args) throws ScriptingException {
 
-        try (Reader reader = readerForScript(new ClassPathResource(scriptLocation))) {
+        try (Reader reader = readerForScript(bundle)) {
             engine.eval(reader);
         } catch (IOException err) {
             throw new ScriptingException(String.format(
-                    "failed to read script from classpath, using path '%s'",
-                    scriptLocation), err);
+                    "failed to read script from resource '%s'",
+                    bundle.getDescription()), err);
         } catch (ScriptException err) {
             throw extractJavaScriptError(err)
                     .map(jsError -> new ScriptingException(
@@ -58,14 +58,15 @@ public final class NashornScriptingBridge implements ScriptingEngine {
         }
     }
 
-    private static Reader readerForScript(final ClassPathResource scriptLocation) {
+    private static Reader readerForScript(final Resource scriptLocation)
+            throws IOException {
         final InputStream is;
         try {
             is = scriptLocation.getInputStream();
         } catch (IOException err) {
             throw new ScriptingException(String.format(
-                    "failed to initialize input stream using path '%s'",
-                    scriptLocation.getPath()), err);
+                    "failed to initialize input stream for resource '%s'",
+                    scriptLocation.getDescription()), err);
         }
         final Reader isr = new InputStreamReader(is);
         return new BufferedReader(isr);

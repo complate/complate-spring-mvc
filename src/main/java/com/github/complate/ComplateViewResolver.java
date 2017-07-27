@@ -1,5 +1,7 @@
 package com.github.complate;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
@@ -13,26 +15,27 @@ public class ComplateViewResolver implements ViewResolver {
 
     private final ScriptingEngine scriptingEngine;
 
-    private final String scriptLocation;
+    private final Resource bundle;
 
     public ComplateViewResolver(final ScriptingEngine scriptingEngine,
-                                final String scriptLocation) {
+                                final Resource bundle) {
         Assert.notNull(scriptingEngine, "ScriptingEngine must not be null");
-        Assert.hasText(scriptLocation,
-            "scriptLocation must not be null or empty");
+        Assert.notNull(bundle,
+            "bundle must not be null");
         this.scriptingEngine = scriptingEngine;
-        this.scriptLocation = scriptLocation;
+        this.bundle = bundle;
     }
 
     public ComplateViewResolver() {
-        this(new NashornScriptingBridge(), DEFAULT_SCRIPT_LOCATION);
+        this(new NashornScriptingBridge(),
+                new ClassPathResource(DEFAULT_SCRIPT_LOCATION));
     }
 
     @Override
     public View resolveViewName(String viewName, Locale locale) throws Exception {
         return new ComplateView(
                 this.scriptingEngine,
-                this.scriptLocation,
+                this.bundle,
                 viewName);
     }
 

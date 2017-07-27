@@ -3,6 +3,7 @@ package com.github.complate
 import java.util.Collections
 
 import org.scalatest.{MustMatchers, WordSpec}
+import org.springframework.core.io.ClassPathResource
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
 class ComplateViewSpec extends WordSpec with MustMatchers {
@@ -12,11 +13,11 @@ class ComplateViewSpec extends WordSpec with MustMatchers {
     "invoke the render function" in {
 
       val engine = new NashornScriptingBridge
-      val scriptLocation = "/views/complate/bundle.js"
+      val bundle = new ClassPathResource("/views/complate/bundle.js")
       val tag = "my-site-index"
       val model = Collections.singletonMap("title", "ვეპხის ტყაოსანი შოთა რუსთაველი")
 
-      val view = new ComplateView(engine, scriptLocation, tag)
+      val view = new ComplateView(engine, bundle, tag)
 
       val request = new MockHttpServletRequest
       val response = new MockHttpServletResponse
