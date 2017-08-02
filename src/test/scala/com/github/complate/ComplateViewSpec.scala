@@ -26,10 +26,10 @@ class ComplateViewSpec extends WordSpec with MustMatchers {
 
       val responseBodyLines = response.getContentAsString.split("\n")
 
-      responseBodyLines.length mustEqual 2
+      responseBodyLines.length mustEqual 3
       responseBodyLines(0) mustEqual tag
       responseBodyLines(1) mustEqual model.get("title")
-
+      responseBodyLines(2) mustEqual "0,1,2"
     }
   }
 
