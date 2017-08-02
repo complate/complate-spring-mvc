@@ -3,9 +3,9 @@ package com.github.complate;
 import jdk.nashorn.api.scripting.NashornException;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import jdk.nashorn.api.scripting.URLReader;
 import org.springframework.core.io.Resource;
 
+import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.io.*;
 import java.util.Optional;
@@ -47,19 +47,14 @@ public final class NashornScriptingBridge implements ScriptingEngine {
         }
     }
 
-    private NashornScriptEngine createEngine() {
-        final NashornScriptEngine engine =
-                (NashornScriptEngine) new NashornScriptEngineFactory().getScriptEngine();
+    private static NashornScriptEngine createEngine() {
+        final ScriptEngine engine =
+                new NashornScriptEngineFactory().getScriptEngine();
         if (engine == null) {
             throw new ScriptingException(
                     "Cannot instantiate Nashorn Script Engine");
         } else {
-            try (final Reader reader = new URLReader(getClass().getResource("/nashorn_modules/node_modules/babel-polyfill/dist/polyfill.min.js"))) {
-                engine.eval(reader);
-            } catch (ScriptException | IOException e) {
-                throw new ScriptingException("Cannot load babel-polyfill", e);
-            }
-            return engine;
+            return (NashornScriptEngine) engine;
         }
     }
 
