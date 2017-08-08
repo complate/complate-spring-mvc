@@ -31,7 +31,7 @@ autoScalaLibrary := false
 libraryDependencies ++= Seq(
   "org.springframework" % "spring-webmvc" % "4.3.10.RELEASE",
   "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided",
-  "org.springframework" % "spring-test" % "4.3.10.RELEASE",
+  "org.springframework" % "spring-test" % "4.3.10.RELEASE" % "test",
   "org.scalatest" %% "scalatest" % "3.0.3" % "test",
   "org.mockito" % "mockito-core" % "2.8.47" % "test"
 )
