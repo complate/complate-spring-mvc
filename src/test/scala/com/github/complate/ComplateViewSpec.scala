@@ -31,6 +31,26 @@ class ComplateViewSpec extends WordSpec with MustMatchers {
       responseBodyLines(1) mustEqual model.get("title")
 
     }
+
+    "invoke the render function and assert global object is not undefined" in {
+
+      val engine = new NashornScriptingBridge
+      val bundle = new ClassPathResource("/views/complate/bundle-global-obj.js")
+      val model = Collections.emptyMap[String,String]()
+
+      val view = new ComplateView(engine, bundle, "")
+
+      val request = new MockHttpServletRequest
+      val response = new MockHttpServletResponse
+
+      view.render(model, request, response)
+
+      val responseBodyLines = response.getContentAsString.split("\n")
+
+      responseBodyLines.length mustEqual 1
+      responseBodyLines(0) mustEqual "[object global]"
+
+    }
   }
 
 }
