@@ -14,6 +14,8 @@ public final class NashornScriptingBridge implements ScriptingEngine {
 
     private final NashornScriptEngine engine = createEngine();
 
+    private static final String GLOBAL_OBJ = "var global = this; \n\n";
+
     public void invoke(final Resource bundle,
                        final String functionName,
                        final Object... args) throws ScriptingException {
@@ -68,8 +70,14 @@ public final class NashornScriptingBridge implements ScriptingEngine {
                     "failed to initialize input stream for resource '%s'",
                     scriptLocation.getDescription()), err);
         }
-        final Reader isr = new InputStreamReader(is);
+        InputStream stream = prependGlobalObject(is);
+        final Reader isr = new InputStreamReader(stream);
         return new BufferedReader(isr);
+    }
+
+    private static InputStream prependGlobalObject(InputStream is) {
+        InputStream globalObjIS = new ByteArrayInputStream(GLOBAL_OBJ.getBytes());
+        return new SequenceInputStream(globalObjIS, is);
     }
 
     private static Optional<String> extractJavaScriptError(final Exception err) {
