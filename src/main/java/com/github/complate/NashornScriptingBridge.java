@@ -14,7 +14,7 @@ public final class NashornScriptingBridge implements ScriptingEngine {
 
     private final NashornScriptEngine engine = createEngine();
 
-    private static final String GLOBAL_OBJ = "var global = this; print(typeof global); print(global); print(typeof this); print(this); \n\n";
+    private static final String GLOBAL_OBJ = "var global = this; \n\n";
 
     public void invoke(final Resource bundle,
                        final String functionName,
