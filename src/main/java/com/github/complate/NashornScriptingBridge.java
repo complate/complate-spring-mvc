@@ -14,7 +14,13 @@ public final class NashornScriptingBridge implements ScriptingEngine {
 
     private final NashornScriptEngine engine = createEngine();
 
-    private static final String GLOBAL_OBJ = "var global = this; \n\n";
+    private static final String POLYFILLS =
+            "if(typeof global === \"undefined\") {\n" +
+            "    var global = this;\n" +
+            "}\n" +
+            "if(typeof console === \"undefined\") {\n" +
+            "    var console = { log: print, error: print };\n" +
+            "}\n\n";
 
     public void invoke(final Resource bundle,
                        final String functionName,
@@ -70,14 +76,14 @@ public final class NashornScriptingBridge implements ScriptingEngine {
                     "failed to initialize input stream for resource '%s'",
                     scriptLocation.getDescription()), err);
         }
-        InputStream stream = prependGlobalObject(is);
+        InputStream stream = prependPolyfills(is);
         final Reader isr = new InputStreamReader(stream);
         return new BufferedReader(isr);
     }
 
-    private static InputStream prependGlobalObject(InputStream is) {
-        InputStream globalObjIS = new ByteArrayInputStream(GLOBAL_OBJ.getBytes());
-        return new SequenceInputStream(globalObjIS, is);
+    private static InputStream prependPolyfills(InputStream is) {
+        InputStream polyfillsIS = new ByteArrayInputStream(POLYFILLS.getBytes());
+        return new SequenceInputStream(polyfillsIS, is);
     }
 
     private static Optional<String> extractJavaScriptError(final Exception err) {
