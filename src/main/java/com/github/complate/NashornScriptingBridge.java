@@ -5,14 +5,17 @@ import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.springframework.core.io.Resource;
 
+import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.io.*;
+import java.util.Map;
 import java.util.Optional;
 
 public final class NashornScriptingBridge implements ScriptingEngine {
 
-    private final NashornScriptEngine engine = createEngine();
+    private final NashornScriptEngine engine;
 
     private static final String POLYFILLS =
             "if(typeof global === \"undefined\") {\n" +
@@ -21,6 +24,15 @@ public final class NashornScriptingBridge implements ScriptingEngine {
             "if(typeof console === \"undefined\") {\n" +
             "    var console = { log: print, error: print };\n" +
             "}\n\n";
+
+    public NashornScriptingBridge() {
+        this.engine = createEngine();
+    }
+
+    public NashornScriptingBridge(final Map<String,Object> bindings) {
+        this();
+        addEngineScopeBindings(bindings);
+    }
 
     public void invoke(final Resource bundle,
                        final String functionName,
@@ -94,5 +106,10 @@ public final class NashornScriptingBridge implements ScriptingEngine {
         } else {
             return Optional.empty();
         }
+    }
+
+    private void addEngineScopeBindings(final Map<String, Object> bindings) {
+        Bindings engineBindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+        bindings.forEach(engineBindings::put);
     }
 }

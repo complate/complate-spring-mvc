@@ -6,6 +6,8 @@ import org.scalatest.{MustMatchers, WordSpec}
 import org.springframework.core.io.ClassPathResource
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
+import scala.collection.JavaConverters.mapAsJavaMap
+
 class ComplateViewSpec extends WordSpec with MustMatchers {
 
   "ComplateView" must {
@@ -50,6 +52,32 @@ class ComplateViewSpec extends WordSpec with MustMatchers {
       responseBodyLines.length mustEqual 1
       responseBodyLines(0) mustEqual "[object global]"
 
+    }
+
+    "provide the bindings set up by the user" in {
+
+      case class TestBinding(prefix: String) {
+        def run(s:String): String = s"$prefix: $s World!"
+      }
+
+      val engine = new NashornScriptingBridge(mapAsJavaMap(Map(
+        ("firstBinding", TestBinding("First binding says")),
+        ("secondBinding", TestBinding("Second binding says")))))
+
+      val bundle = new ClassPathResource("/views/complate/bundle-bindings-test.js")
+
+      val request = new MockHttpServletRequest
+      val response = new MockHttpServletResponse
+
+      val view = new ComplateView(engine, bundle, "irrelevant")
+
+      view.render(null, request, response)
+
+      val responseBodyLines = response.getContentAsString.split("\n")
+
+      responseBodyLines.length mustEqual 2
+      responseBodyLines(0) mustEqual "First binding says: Hello World!"
+      responseBodyLines(1) mustEqual "Second binding says: Bye World!"
     }
   }
 
