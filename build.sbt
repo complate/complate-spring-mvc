@@ -28,7 +28,9 @@ publishTo := Some(
 crossPaths := false
 autoScalaLibrary := false
 
+resolvers += Resolver.mavenLocal
 libraryDependencies ++= Seq(
+  "com.github.complate" % "complate-java" % "0.1.0-SNAPSHOT",
   "org.springframework" % "spring-webmvc" % "4.3.10.RELEASE",
   "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided",
   "org.springframework" % "spring-test" % "4.3.10.RELEASE" % "test",

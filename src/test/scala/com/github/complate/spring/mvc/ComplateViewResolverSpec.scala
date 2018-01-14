@@ -1,4 +1,4 @@
-package com.github.complate
+package com.github.complate.spring.mvc
 
 import java.util.Locale
 

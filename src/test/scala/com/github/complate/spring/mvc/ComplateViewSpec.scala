@@ -1,7 +1,8 @@
-package com.github.complate
+package com.github.complate.spring.mvc
 
 import java.util.Collections
 
+import com.github.complate.api.ComplateEngine
 import org.scalatest.{MustMatchers, WordSpec}
 import org.springframework.core.io.ClassPathResource
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
@@ -14,7 +15,7 @@ class ComplateViewSpec extends WordSpec with MustMatchers {
 
     "invoke the render function" in {
 
-      val engine = new NashornScriptingBridge
+      val engine = ComplateEngine.create()
       val bundle = new ClassPathResource("/views/complate/bundle.js")
       val tag = "my-site-index"
       val model = Collections.singletonMap("title", "ვეპხის ტყაოსანი შოთა რუსთაველი")
@@ -36,7 +37,7 @@ class ComplateViewSpec extends WordSpec with MustMatchers {
 
     "invoke the render function and assert global object is not undefined" in {
 
-      val engine = new NashornScriptingBridge
+      val engine = ComplateEngine.create()
       val bundle = new ClassPathResource("/views/complate/bundle-global-obj.js")
       val model = Collections.emptyMap[String,String]()
 
@@ -60,7 +61,7 @@ class ComplateViewSpec extends WordSpec with MustMatchers {
         def run(s:String): String = s"$prefix: $s World!"
       }
 
-      val engine = new NashornScriptingBridge(mapAsJavaMap(Map(
+      val engine = ComplateEngine.create(mapAsJavaMap(Map(
         ("firstBinding", TestBinding("First binding says")),
         ("secondBinding", TestBinding("Second binding says")))))
 
