@@ -2,12 +2,12 @@ package com.github.complate.spring.mvc;
 
 import com.github.complate.api.ComplateBundle;
 import com.github.complate.api.ComplateStream;
-import com.github.complate.impl.servlet.HttpServletResponseComplateStream;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.View;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Map;
 
 public final class ComplateView implements View {
@@ -16,12 +16,16 @@ public final class ComplateView implements View {
 
     private final ComplateBundle bundle;
     private final String tag;
+    private final ComplateStreamFactory streamFactory;
 
-    ComplateView(final ComplateBundle bundle, final String tag) {
+    ComplateView(final ComplateBundle bundle, final String tag,
+            final ComplateStreamFactory streamFactory) {
         Assert.notNull(bundle, "bundle must not be null");
         Assert.notNull(tag, "tag must not be null");
+        Assert.notNull(streamFactory, "streamFactory must not be null");
         this.bundle = bundle;
         this.tag = tag;
+        this.streamFactory = streamFactory;
     }
 
     @Override
@@ -36,8 +40,13 @@ public final class ComplateView implements View {
 
         response.setContentType(DEFAULT_CONTENT_TYPE);
 
-        final ComplateStream stream = HttpServletResponseComplateStream.fromResponse(response);
+        final ComplateStream stream = streamFactory.from(response);
 
         this.bundle.render(stream, tag, model);
+    }
+
+    @FunctionalInterface
+    public interface ComplateStreamFactory {
+        ComplateStream from(HttpServletResponse response) throws IOException;
     }
 }

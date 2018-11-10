@@ -3,6 +3,8 @@ package com.github.complate.spring.mvc;
 import com.github.complate.api.ComplateBundle;
 import com.github.complate.api.ComplateScript;
 import com.github.complate.api.NashornComplateBundle;
+import com.github.complate.impl.servlet.HttpServletResponseComplateStream;
+import com.github.complate.spring.mvc.ComplateView.ComplateStreamFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.View;
@@ -17,6 +19,7 @@ public final class ComplateViewResolver implements ViewResolver {
             new ResourceComplateScript(new ClassPathResource("/templates/complate/bundle.js"));
 
     private final ComplateBundle bundle;
+    private ComplateStreamFactory streamFactory = HttpServletResponseComplateStream::fromResponse;
 
     public ComplateViewResolver(final Map<String, ?> bindings) {
         this(new NashornComplateBundle(DEFAULT_SCRIPT, bindings));
@@ -27,8 +30,13 @@ public final class ComplateViewResolver implements ViewResolver {
         this.bundle = bundle;
     }
 
+    public void setStreamFactory(ComplateStreamFactory streamFactory) {
+        Assert.notNull(streamFactory, "streamFactory must not be null");
+        this.streamFactory = streamFactory;
+    }
+
     @Override
     public View resolveViewName(final String viewName, final Locale locale) {
-        return new ComplateView(bundle, viewName);
+        return new ComplateView(bundle, viewName, streamFactory);
     }
 }
