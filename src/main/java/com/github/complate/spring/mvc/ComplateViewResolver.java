@@ -1,41 +1,34 @@
 package com.github.complate.spring.mvc;
 
-import com.github.complate.api.ComplateEngine;
-import com.github.complate.spring.mvc.ComplateView;
+import com.github.complate.api.ComplateBundle;
+import com.github.complate.api.ComplateScript;
+import com.github.complate.api.NashornComplateBundle;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
 import java.util.Locale;
+import java.util.Map;
 
 public final class ComplateViewResolver implements ViewResolver {
 
-    public static final Resource DEFAULT_BUNDLE =
-            new ClassPathResource("/templates/complate/bundle.js");
+    public static final ComplateScript DEFAULT_SCRIPT =
+            new ResourceComplateScript(new ClassPathResource("/templates/complate/bundle.js"));
 
-    private final ComplateEngine engine;
+    private final ComplateBundle bundle;
 
-    private final Resource script;
-
-    public ComplateViewResolver() {
-        this(DEFAULT_BUNDLE);
+    public ComplateViewResolver(final Map<String, ?> bindings) {
+        this(new NashornComplateBundle(DEFAULT_SCRIPT, bindings));
     }
 
-    public ComplateViewResolver(final Resource script) {
-        this(ComplateEngine.create(), script);
-    }
-
-    public ComplateViewResolver(final ComplateEngine engine, final Resource script) {
-        Assert.notNull(engine, "engine must not be null");
-        Assert.notNull(script, "script must not be null");
-        this.engine = engine;
-        this.script = script;
+    public ComplateViewResolver(final ComplateBundle bundle) {
+        Assert.notNull(bundle, "bundle must not be null");
+        this.bundle = bundle;
     }
 
     @Override
     public View resolveViewName(final String viewName, final Locale locale) {
-        return new ComplateView(engine, script, viewName);
+        return new ComplateView(bundle, viewName);
     }
 }

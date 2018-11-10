@@ -1,6 +1,7 @@
 package com.github.complate.spring.mvc;
 
 import com.github.complate.api.ComplateScript;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
@@ -29,5 +30,9 @@ public final class ResourceComplateScript implements ComplateScript {
     @Override
     public String toString() {
         return getDescription();
+    }
+
+    public static ResourceComplateScript fromClasspath(String path) {
+        return new ResourceComplateScript(new ClassPathResource(path));
     }
 }

@@ -1,10 +1,8 @@
 package com.github.complate.spring.mvc;
 
-import com.github.complate.api.ComplateEngine;
-import com.github.complate.api.ComplateScript;
+import com.github.complate.api.ComplateBundle;
 import com.github.complate.api.ComplateStream;
 import com.github.complate.impl.servlet.HttpServletResponseComplateStream;
-import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.View;
 
@@ -16,20 +14,13 @@ public final class ComplateView implements View {
 
     private static final String DEFAULT_CONTENT_TYPE = "text/html; charset=UTF-8";
 
-    private final ComplateEngine engine;
-    private final ComplateScript script;
+    private final ComplateBundle bundle;
     private final String tag;
 
-    ComplateView (final ComplateEngine engine, final Resource script, final String tag) {
-        this(engine, new ResourceComplateScript(script), tag);
-    }
-
-    private ComplateView(final ComplateEngine engine, final ComplateScript script, final String tag) {
-        Assert.notNull(engine, "engine must not be null");
-        Assert.notNull(script, "script must not be null");
+    ComplateView(final ComplateBundle bundle, final String tag) {
+        Assert.notNull(bundle, "bundle must not be null");
         Assert.notNull(tag, "tag must not be null");
-        this.engine = engine;
-        this.script = script;
+        this.bundle = bundle;
         this.tag = tag;
     }
 
@@ -47,6 +38,6 @@ public final class ComplateView implements View {
 
         final ComplateStream stream = HttpServletResponseComplateStream.fromResponse(response);
 
-        this.engine.invoke(script, stream, tag, model);
+        this.bundle.render(stream, tag, model);
     }
 }

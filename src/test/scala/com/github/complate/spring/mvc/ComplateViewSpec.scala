@@ -2,9 +2,8 @@ package com.github.complate.spring.mvc
 
 import java.util.Collections
 
-import com.github.complate.api.ComplateEngine
+import com.github.complate.api.NashornComplateBundle
 import org.scalatest.{MustMatchers, WordSpec}
-import org.springframework.core.io.ClassPathResource
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
 import scala.collection.JavaConverters.mapAsJavaMap
@@ -15,12 +14,12 @@ class ComplateViewSpec extends WordSpec with MustMatchers {
 
     "invoke the render function" in {
 
-      val engine = ComplateEngine.create()
-      val bundle = new ClassPathResource("/views/complate/bundle.js")
+      val script = ResourceComplateScript.fromClasspath("/views/complate/bundle.js")
+      val bundle = new NashornComplateBundle(script)
       val tag = "my-site-index"
       val model = Collections.singletonMap("title", "ვეპხის ტყაოსანი შოთა რუსთაველი")
 
-      val view = new ComplateView(engine, bundle, tag)
+      val view = new ComplateView(bundle, tag)
 
       val request = new MockHttpServletRequest
       val response = new MockHttpServletResponse
@@ -37,11 +36,11 @@ class ComplateViewSpec extends WordSpec with MustMatchers {
 
     "invoke the render function and assert global object is not undefined" in {
 
-      val engine = ComplateEngine.create()
-      val bundle = new ClassPathResource("/views/complate/bundle-global-obj.js")
+      val script = ResourceComplateScript.fromClasspath("/views/complate/bundle-global-obj.js")
+      val bundle = new NashornComplateBundle(script)
       val model = Collections.emptyMap[String,String]()
 
-      val view = new ComplateView(engine, bundle, "")
+      val view = new ComplateView(bundle, "")
 
       val request = new MockHttpServletRequest
       val response = new MockHttpServletResponse
@@ -61,16 +60,15 @@ class ComplateViewSpec extends WordSpec with MustMatchers {
         def run(s:String): String = s"$prefix: $s World!"
       }
 
-      val engine = ComplateEngine.create(mapAsJavaMap(Map(
+      val script = ResourceComplateScript.fromClasspath("/views/complate/bundle-bindings-test.js")
+      val bundle = new NashornComplateBundle(script, mapAsJavaMap(Map(
         ("firstBinding", TestBinding("First binding says")),
         ("secondBinding", TestBinding("Second binding says")))))
-
-      val bundle = new ClassPathResource("/views/complate/bundle-bindings-test.js")
 
       val request = new MockHttpServletRequest
       val response = new MockHttpServletResponse
 
-      val view = new ComplateView(engine, bundle, "irrelevant")
+      val view = new ComplateView(bundle, "irrelevant")
 
       view.render(null, request, response)
 
